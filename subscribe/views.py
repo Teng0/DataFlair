@@ -1,0 +1,25 @@
+from django.shortcuts import render
+from dataFlair.settings import EMAIL_HOST_USER
+from . import forms
+from django.core.mail import send_mail, EmailMessage
+
+
+# Create your views here.
+
+
+# DataFlair #Send Email
+def subscribe(request):
+    sub = forms.Subscribe()
+    if request.method == 'POST':
+        sub = forms.Subscribe(request.POST)
+        subject = 'Welcome to DataFlair'
+        message = 'Hope you are enjoying your Django Tutorials'
+        recepient = str(sub['email'].value())
+        send_mail(subject,
+                  message, EMAIL_HOST_USER, [recepient], fail_silently=False)
+        return render(request, 'subscribe/success.html', {'recepient': recepient})
+    # Msg = EmailMessage()
+    # Msg.send(failed_silently=False)
+    # Msg.recipients()
+    # Msg.attach_file("pathtothefile")
+    return render(request, 'subscribe/index.html', {'form': sub})
